@@ -29,7 +29,6 @@ class CocktailControllerTest {
 
         // when
         val response = cocktailController.readAll();
-        System.out.println(response.getBody());
 
         //then
         assertNotNull(response);
