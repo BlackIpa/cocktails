@@ -11,5 +11,5 @@ public class CocktailSummaryDto {
 
     private Long id;
     private String name;
-    private String recipe;
+
 }

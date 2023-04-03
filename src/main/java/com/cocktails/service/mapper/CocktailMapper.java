@@ -13,9 +13,11 @@ import java.util.stream.Collectors;
 public class CocktailMapper {
 
     private final CocktailIngredientMapper cocktailIngredientMapper;
+    private final CocktailStepMapper stepMapper;
 
-    public CocktailMapper(CocktailIngredientMapper cocktailIngredientMapper) {
+    public CocktailMapper(CocktailIngredientMapper cocktailIngredientMapper, CocktailStepMapper stepMapper) {
         this.cocktailIngredientMapper = cocktailIngredientMapper;
+        this.stepMapper = stepMapper;
     }
 
     public CocktailDetailsDto cocktailToDetailsDto(Cocktail cocktail) {
@@ -23,9 +25,11 @@ public class CocktailMapper {
         CocktailDetailsDto cocktailDetailsDto = new CocktailDetailsDto();
         cocktailDetailsDto.setId(cocktail.getId());
         cocktailDetailsDto.setName(cocktail.getName());
-        cocktailDetailsDto.setRecipe(cocktail.getRecipe());
         cocktailDetailsDto.setCocktailIngredientsDto(cocktail.getCocktailIngredients().stream()
                 .map(cocktailIngredientMapper::cocktailIngredientToDto)
+                .collect(Collectors.toList()));
+        cocktailDetailsDto.setStepsDto(cocktail.getSteps().stream()
+                .map(stepMapper::stepToDto)
                 .collect(Collectors.toList()));
         return cocktailDetailsDto;
     }

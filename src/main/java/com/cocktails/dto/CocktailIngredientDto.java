@@ -10,4 +10,5 @@ public class CocktailIngredientDto {
     private Long id;
     private String quantity;
     private IngredientDto ingredient;
+
 }
