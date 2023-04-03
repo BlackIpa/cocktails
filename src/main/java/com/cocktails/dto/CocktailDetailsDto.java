@@ -11,7 +11,8 @@ import java.util.List;
 public class CocktailDetailsDto {
 
     private Long id;
-    private List<CocktailIngredientDto> cocktailIngredientsDto;
     private String name;
-    private String recipe;
+    private List<CocktailIngredientDto> cocktailIngredientsDto;
+    private List<StepDto> stepsDto;
+
 }

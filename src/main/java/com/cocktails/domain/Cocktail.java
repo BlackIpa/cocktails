@@ -18,13 +18,13 @@ public class Cocktail {
     @Column(name = "id")
     private Long id;
 
-    @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CocktailIngredient> cocktailIngredients = new ArrayList<>();
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "recipe")
-    private String recipe;
+    @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Step> steps = new ArrayList<>();
 
 }
