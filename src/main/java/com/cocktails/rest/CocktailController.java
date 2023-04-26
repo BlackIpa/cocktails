@@ -28,13 +28,13 @@ public class CocktailController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CocktailSummaryDto>> readAll() {
+    public ResponseEntity<List<CocktailSummaryDto>> findAll() {
         log.debug("Read all cocktails");
         return ResponseEntity.ok().body(cocktailService.readAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CocktailDetailsDto> readById(@PathVariable Long id) {
+    public ResponseEntity<CocktailDetailsDto> findById(@PathVariable Long id) {
         try {
             CocktailDetailsDto cocktailDetailsDto = cocktailService.findById(id);
             return ResponseEntity.ok(cocktailDetailsDto);

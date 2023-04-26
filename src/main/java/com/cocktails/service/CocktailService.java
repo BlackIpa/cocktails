@@ -27,7 +27,7 @@ public class CocktailService {
 
     public CocktailDetailsDto findById(Long id) {
         Cocktail cocktail = cocktailRepository.findById(id).orElseThrow(
-                () ->new EntityNotFoundException("Cocktail not found with id: " + id));
+                () -> new EntityNotFoundException("Cocktail not found with id: " + id));
         return cocktailMapper.cocktailToDetailsDto(cocktail);
     }
 
