@@ -29,6 +29,6 @@ public class CocktailIngredient {
     private Ingredient ingredient;
 
     @Column(name = "quantity")
-    private String quantity;
+    private BigDecimal quantity;
 
 }

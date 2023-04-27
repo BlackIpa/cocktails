@@ -8,6 +8,8 @@ import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CocktailIngredientMapperTest {
@@ -30,7 +32,7 @@ public class CocktailIngredientMapperTest {
 
         val cocktailIngredient = new CocktailIngredient();
         cocktailIngredient.setId(1L);
-        cocktailIngredient.setQuantity("2.0");
+        cocktailIngredient.setQuantity(BigDecimal.valueOf(2.0));
         cocktailIngredient.setIngredient(ingredient);
 
         // when

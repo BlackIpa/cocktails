@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,7 +14,7 @@ import lombok.Setter;
 public class CocktailIngredientDto {
 
     private Long id;
-    private String quantity;
+    private BigDecimal quantity;
     private IngredientDto ingredient;
 
 }
