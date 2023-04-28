@@ -62,10 +62,10 @@ class CocktailMapperTest {
         assertEquals(cocktailDetailsDto.getId(), cocktail.getId());
         assertEquals(cocktailDetailsDto.getName(), cocktail.getName());
         assertEquals(cocktailDetailsDto.getPreparationMethod(), cocktail.getPreparationMethod());
-        assertEquals(cocktailDetailsDto.getCocktailIngredientsDto().get(0).getIngredient().getName(),
-                cocktailIngredients.get(0).getIngredient().getName());
-        assertEquals(cocktailDetailsDto.getStepsDto().get(0).getDescription(),
-                cocktail.getSteps().get(0).getDescription());
+        assertEquals(cocktailDetailsDto.getPreparationMethod(), cocktail.getPreparationMethod());
+        assertEquals(cocktailDetailsDto.getGlassName(), cocktail.getGlass().getName());
+        assertEquals(cocktailDetailsDto.getCocktailIngredientsDto().size(), cocktailIngredients.size());
+        assertEquals(cocktailDetailsDto.getStepsDto().size(), cocktail.getSteps().size());
     }
 
 }

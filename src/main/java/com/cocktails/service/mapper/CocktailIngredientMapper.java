@@ -13,6 +13,7 @@ public class CocktailIngredientMapper {
         CocktailIngredientDto cocktailIngredientDto = new CocktailIngredientDto();
         cocktailIngredientDto.setId(cocktailIngredient.getId());
         cocktailIngredientDto.setQuantity(cocktailIngredient.getQuantity());
+        cocktailIngredientDto.setUnit(cocktailIngredient.getUnit());
 
         Ingredient ingredient = cocktailIngredient.getIngredient();
         IngredientDto ingredientDto = new IngredientDto();

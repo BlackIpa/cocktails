@@ -1,5 +1,6 @@
 package com.cocktails.domain;
 
+import com.cocktails.domain.enums.Unit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,5 +31,9 @@ public class CocktailIngredient {
 
     @Column(name = "quantity")
     private BigDecimal quantity;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "unit")
+    private Unit unit;
 
 }
