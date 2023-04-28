@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
 
-    @Query("SELECT new com.cocktails.dto.CocktailSummaryDto(c.id, c.name) FROM Cocktail c")
+    @Query("SELECT new com.cocktails.dto.CocktailSummaryDto(c.id, c.name, c.preparationMethod, g.iconName) " +
+            "FROM Cocktail c JOIN c.glass g")
     List<CocktailSummaryDto> findAllSummaries();
 }

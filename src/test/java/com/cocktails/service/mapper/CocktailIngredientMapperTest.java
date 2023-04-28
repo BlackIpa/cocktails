@@ -3,6 +3,7 @@ package com.cocktails.service.mapper;
 import com.cocktails.domain.CocktailIngredient;
 import com.cocktails.domain.Ingredient;
 import com.cocktails.domain.enums.IngredientType;
+import com.cocktails.domain.enums.Unit;
 import com.cocktails.dto.IngredientDto;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +25,6 @@ public class CocktailIngredientMapperTest {
     @Test
     public void cocktailIngredientToDto_ShouldReturnResult() {
 
-        // given
         val ingredient = new Ingredient();
         ingredient.setId(1L);
         ingredient.setName("Vodka");
@@ -33,14 +33,14 @@ public class CocktailIngredientMapperTest {
         val cocktailIngredient = new CocktailIngredient();
         cocktailIngredient.setId(1L);
         cocktailIngredient.setQuantity(BigDecimal.valueOf(2.0));
+        cocktailIngredient.setUnit(Unit.OZ);
         cocktailIngredient.setIngredient(ingredient);
 
-        // when
         val cocktailIngredientDto = cocktailIngredientMapper.cocktailIngredientToDto(cocktailIngredient);
 
-        // then
         assertEquals(cocktailIngredient.getId(), cocktailIngredientDto.getId());
         assertEquals(cocktailIngredient.getQuantity(), cocktailIngredientDto.getQuantity());
+        assertEquals(cocktailIngredient.getUnit(), cocktailIngredientDto.getUnit());
 
         IngredientDto ingredientDto = cocktailIngredientDto.getIngredient();
         assertEquals(ingredient.getId(), ingredientDto.getId());

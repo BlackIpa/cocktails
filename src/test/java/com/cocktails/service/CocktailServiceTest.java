@@ -1,6 +1,7 @@
 package com.cocktails.service;
 
 import com.cocktails.domain.Cocktail;
+import com.cocktails.domain.enums.PreparationMethod;
 import com.cocktails.dto.CocktailDetailsDto;
 import com.cocktails.dto.CocktailSummaryDto;
 import com.cocktails.repository.CocktailRepository;
@@ -35,7 +36,7 @@ public class CocktailServiceTest {
     public void readAll_ShouldReturnResult() {
 
         // given
-        val cocktail = new CocktailSummaryDto(1L, "Casino");
+        val cocktail = new CocktailSummaryDto(1L, "Casino", PreparationMethod.STIRRED, "highball-icon");
         when(cocktailRepository.findAllSummaries()).thenReturn(List.of(cocktail));
 
         // when
