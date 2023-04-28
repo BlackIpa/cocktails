@@ -25,6 +25,9 @@ public class CocktailMapper {
         CocktailDetailsDto cocktailDetailsDto = new CocktailDetailsDto();
         cocktailDetailsDto.setId(cocktail.getId());
         cocktailDetailsDto.setName(cocktail.getName());
+        cocktailDetailsDto.setPreparationMethod(cocktail.getPreparationMethod());
+        cocktailDetailsDto.setGlassName(cocktail.getGlass().getName());
+        cocktailDetailsDto.setGlassIcon(cocktail.getGlass().getIconName());
         cocktailDetailsDto.setCocktailIngredientsDto(cocktail.getCocktailIngredients().stream()
                 .map(cocktailIngredientMapper::cocktailIngredientToDto)
                 .collect(Collectors.toList()));

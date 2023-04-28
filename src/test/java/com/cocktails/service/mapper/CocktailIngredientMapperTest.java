@@ -24,7 +24,6 @@ public class CocktailIngredientMapperTest {
     @Test
     public void cocktailIngredientToDto_ShouldReturnResult() {
 
-        // given
         val ingredient = new Ingredient();
         ingredient.setId(1L);
         ingredient.setName("Vodka");
@@ -35,10 +34,8 @@ public class CocktailIngredientMapperTest {
         cocktailIngredient.setQuantity(BigDecimal.valueOf(2.0));
         cocktailIngredient.setIngredient(ingredient);
 
-        // when
         val cocktailIngredientDto = cocktailIngredientMapper.cocktailIngredientToDto(cocktailIngredient);
 
-        // then
         assertEquals(cocktailIngredient.getId(), cocktailIngredientDto.getId());
         assertEquals(cocktailIngredient.getQuantity(), cocktailIngredientDto.getQuantity());
 

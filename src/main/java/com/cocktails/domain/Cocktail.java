@@ -1,5 +1,7 @@
 package com.cocktails.domain;
 
+import com.cocktails.domain.enums.PreparationMethod;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,5 +28,14 @@ public class Cocktail {
 
     @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Step> steps = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "preparation_method")
+    private PreparationMethod preparationMethod;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "glass_id")
+//    @JsonIgnore
+    private Glass glass;
 
 }
