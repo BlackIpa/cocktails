@@ -1,16 +1,12 @@
 package com.cocktails.rest;
 
-import com.cocktails.domain.Cocktail;
 import com.cocktails.dto.CocktailDetailsDto;
 import com.cocktails.dto.CocktailSummaryDto;
-import com.cocktails.service.CocktailService;
+import com.cocktails.service.CocktailServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -21,9 +17,9 @@ public class CocktailController {
 
     private final Logger log = LoggerFactory.getLogger(CocktailController.class);
 
-    private final CocktailService cocktailService;
+    private final CocktailServiceImpl cocktailService;
 
-    public CocktailController(CocktailService cocktailService) {
+    public CocktailController(CocktailServiceImpl cocktailService) {
         this.cocktailService = cocktailService;
     }
 
@@ -41,5 +37,15 @@ public class CocktailController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<CocktailSummaryDto>> findByName(@RequestParam String name) {
+        return ResponseEntity.ok(cocktailService.findByName(name));
+    }
+
+    @GetMapping("/name")
+    public ResponseEntity<List<String>> findByNameContaining(@RequestParam String name) {
+        return ResponseEntity.ok(cocktailService.findByNamePart(name));
     }
 }
