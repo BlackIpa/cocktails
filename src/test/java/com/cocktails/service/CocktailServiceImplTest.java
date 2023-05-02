@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +23,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CocktailServiceTest {
+public class CocktailServiceImplTest {
 
     @InjectMocks
-    private CocktailService cocktailService;
+    private CocktailServiceImpl cocktailService;
 
     @Mock
     private CocktailRepository cocktailRepository;
@@ -56,9 +58,7 @@ public class CocktailServiceTest {
         // given
         val id = 1L;
         val cocktail = new Cocktail();
-        cocktail.setId(id);
         val cocktailDetailsDto = new CocktailDetailsDto();
-        cocktailDetailsDto.setId(id);
 
         when(cocktailRepository.findById(id)).thenReturn(Optional.of(cocktail));
         when(cocktailMapper.cocktailToDetailsDto(cocktail)).thenReturn(cocktailDetailsDto);
@@ -82,4 +82,64 @@ public class CocktailServiceTest {
         assertThrows(EntityNotFoundException.class, () -> cocktailService.findById(id));
     }
 
+    @Test
+    public void findByName_ShouldReturnResult() {
+
+        // given
+        String keyword = "whi";
+        val summary1 = new CocktailSummaryDto(1L, "Whiskey Smash", PreparationMethod.STIRRED, "highball-icon");
+        val summary2 = new CocktailSummaryDto(2L, "Whiskey Sour", PreparationMethod.STIRRED, "highball-icon");
+        val summaries = Arrays.asList(summary1, summary2);
+
+        when(cocktailRepository.findByName(keyword)).thenReturn(summaries);
+
+        // when
+        val result = cocktailService.findByName(keyword);
+
+        // then
+        assertEquals(summaries, result);
+    }
+
+    @Test
+    public void findByName_ShouldReturnEmptyList() {
+
+        // given
+        String keyword = "wh";
+
+        // when
+        val result = cocktailService.findByName(keyword);
+
+        // then
+        assertEquals(Collections.emptyList(), result);
+    }
+
+    @Test
+    public void findByNamePart_ShouldReturnResult() {
+
+        // given
+        String keyword = "whi";
+        val names = Arrays.asList("Whiskey Sour", "Whiskey Smash");
+
+        when(cocktailRepository.findByNamePart(keyword)).thenReturn(names);
+
+        // when
+        val result = cocktailService.findByNamePart(keyword);
+
+        // then
+        assertEquals(names, result);
+    }
+
+    @Test
+    public void findByNamePart_ShouldReturnEmptyList() {
+
+        // given
+        String keyword = "wh";
+        when(cocktailRepository.findByName(keyword)).thenReturn(Collections.emptyList());
+
+        // when
+        val result = cocktailService.findByNamePart(keyword);
+
+        // then
+        assertEquals(Collections.emptyList(), result);
+    }
 }
