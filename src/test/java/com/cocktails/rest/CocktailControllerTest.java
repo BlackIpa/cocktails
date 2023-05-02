@@ -58,11 +58,11 @@ class CocktailControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].name", is("Casino")))
-                .andExpect(jsonPath("$[0].preparationMethod", is(PreparationMethod.STIRRED)))
+                .andExpect(jsonPath("$[0].preparationMethod", is(PreparationMethod.STIRRED.name())))
                 .andExpect(jsonPath("$[0].glassIcon", is("highball-icon")))
                 .andExpect(jsonPath("$[1].id", is(2)))
                 .andExpect(jsonPath("$[1].name", is("Martini")))
-                .andExpect(jsonPath("$[1].preparationMethod", is(PreparationMethod.STIRRED)))
+                .andExpect(jsonPath("$[1].preparationMethod", is(PreparationMethod.STIRRED.name())))
                 .andExpect(jsonPath("$[1].glassIcon", is("martini-icon")));
 
         verify(cocktailService, times(1)).readAll();
@@ -83,7 +83,7 @@ class CocktailControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.name", is("Casino")))
-                .andExpect(jsonPath("$.preparationMethod", is(PreparationMethod.STIRRED)))
+                .andExpect(jsonPath("$.preparationMethod", is(PreparationMethod.STIRRED.name())))
                 .andExpect(jsonPath("$.glassName", is("Glass")))
                 .andExpect(jsonPath("$.glassIcon", is("highball-icon")))
                 .andExpect(jsonPath("$.cocktailIngredientsDto", is(Collections.emptyList())))
