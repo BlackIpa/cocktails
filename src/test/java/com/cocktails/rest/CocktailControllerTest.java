@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -139,7 +139,7 @@ class CocktailControllerTest {
         when(cocktailService.findByNamePart(keyword)).thenReturn(names);
 
         // when & then
-        mockMvc.perform(get("/cocktails/names")
+        mockMvc.perform(get("/cocktails/name")
                         .param("name", keyword))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))

@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -134,7 +134,6 @@ public class CocktailServiceImplTest {
 
         // given
         String keyword = "wh";
-        when(cocktailRepository.findByName(keyword)).thenReturn(Collections.emptyList());
 
         // when
         val result = cocktailService.findByNamePart(keyword);
