@@ -7,7 +7,7 @@ import com.cocktails.repository.CocktailRepository;
 import com.cocktails.service.mapper.CocktailMapper;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
