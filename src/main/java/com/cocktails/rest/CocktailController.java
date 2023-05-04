@@ -3,6 +3,7 @@ package com.cocktails.rest;
 import com.cocktails.dto.CocktailDetailsDto;
 import com.cocktails.dto.CocktailSummaryDto;
 import com.cocktails.service.CocktailServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +14,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cocktails")
+@Slf4j
 public class CocktailController {
-
-    private final Logger log = LoggerFactory.getLogger(CocktailController.class);
 
     private final CocktailServiceImpl cocktailService;
 
@@ -25,7 +25,7 @@ public class CocktailController {
 
     @GetMapping
     public ResponseEntity<List<CocktailSummaryDto>> findAll() {
-        log.debug("Read all cocktails");
+        log.info("Read all cocktails");
         return ResponseEntity.ok().body(cocktailService.readAll());
     }
 
