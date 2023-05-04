@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cocktails")
@@ -24,13 +25,17 @@ public class CocktailController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CocktailSummaryDto>> findAll() {
-        log.info("Read all cocktails");
-        return ResponseEntity.ok().body(cocktailService.readAll());
+    public ResponseEntity<List<CocktailSummaryDto>> findCocktails(@RequestParam(required = false) String name) {
+        log.info("Show cocktails list");
+        final List<CocktailSummaryDto> cocktailsList = name == null
+                ? cocktailService.readAll()
+                : cocktailService.findByName(name);
+        return ResponseEntity.ok().body(cocktailsList);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CocktailDetailsDto> findById(@PathVariable Long id) {
+        log.info("Find cocktail by id");
         try {
             CocktailDetailsDto cocktailDetailsDto = cocktailService.findById(id);
             return ResponseEntity.ok(cocktailDetailsDto);
@@ -39,13 +44,9 @@ public class CocktailController {
         }
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<CocktailSummaryDto>> findByName(@RequestParam String name) {
-        return ResponseEntity.ok(cocktailService.findByName(name));
-    }
-
     @GetMapping("/name")
     public ResponseEntity<List<String>> findByNamePart(@RequestParam String name) {
+        log.info("Display cocktails which contain " + name + " in name");
         return ResponseEntity.ok(cocktailService.findByNamePart(name));
     }
 }
