@@ -1,9 +1,10 @@
-package com.cocktails.service;
+package com.cocktails.service.impl;
 
 import com.cocktails.domain.Cocktail;
 import com.cocktails.dto.CocktailDetailsDto;
 import com.cocktails.dto.CocktailSummaryDto;
 import com.cocktails.repository.CocktailRepository;
+import com.cocktails.service.*;
 import com.cocktails.service.mapper.CocktailMapper;
 import org.springframework.stereotype.Service;
 

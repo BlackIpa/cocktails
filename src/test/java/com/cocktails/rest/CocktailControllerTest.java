@@ -3,7 +3,7 @@ package com.cocktails.rest;
 import com.cocktails.domain.enums.PreparationMethod;
 import com.cocktails.dto.CocktailDetailsDto;
 import com.cocktails.dto.CocktailSummaryDto;
-import com.cocktails.service.CocktailServiceImpl;
+import com.cocktails.service.impl.CocktailServiceImpl;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
