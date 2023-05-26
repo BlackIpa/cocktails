@@ -2,16 +2,13 @@ package com.cocktails.rest;
 
 import com.cocktails.dto.CocktailDetailsDto;
 import com.cocktails.dto.CocktailSummaryDto;
-import com.cocktails.service.CocktailServiceImpl;
+import com.cocktails.service.impl.CocktailServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/cocktails")
@@ -49,4 +46,5 @@ public class CocktailController {
         log.info("Display cocktails which contain " + name + " in name");
         return ResponseEntity.ok(cocktailService.findByNamePart(name));
     }
+
 }
