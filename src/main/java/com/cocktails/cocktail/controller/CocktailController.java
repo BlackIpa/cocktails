@@ -4,11 +4,13 @@ import com.cocktails.cocktail.dto.CocktailDetailsDto;
 import com.cocktails.cocktail.dto.CocktailSummaryDto;
 import com.cocktails.cocktail.service.impl.CocktailServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/cocktails")
@@ -27,7 +29,9 @@ public class CocktailController {
         final List<CocktailSummaryDto> cocktailsList = name == null
                 ? cocktailService.readAll()
                 : cocktailService.findByName(name);
-        return ResponseEntity.ok().body(cocktailsList);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS))
+                .body(cocktailsList);
     }
 
     @GetMapping("/{id}")

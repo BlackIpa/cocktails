@@ -6,6 +6,8 @@ import com.cocktails.user.service.CustomerService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -20,6 +22,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer register(Customer customer) {
         customer.setPwd(passwordEncoder.encode(customer.getPwd()));
+        customer.setCreatedAt(LocalDateTime.now());
         return customerRepository.save(customer);
     }
 }
