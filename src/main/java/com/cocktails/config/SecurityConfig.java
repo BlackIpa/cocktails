@@ -30,10 +30,9 @@ public class SecurityConfig {
                         config.setMaxAge(3600L);
                         return config;
                     }
-                }).and().csrf().disable()
+                }).and()
                 .authorizeHttpRequests()
-                .requestMatchers("/cocktails/1").authenticated()
-                .requestMatchers("/cocktails/**", "/register").permitAll()
+                .anyRequest().permitAll()
                 .and().formLogin()
                 .and().httpBasic();
         return http.build();
