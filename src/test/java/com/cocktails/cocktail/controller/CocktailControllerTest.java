@@ -1,6 +1,5 @@
 package com.cocktails.cocktail.controller;
 
-import com.cocktails.cocktail.controller.CocktailController;
 import com.cocktails.cocktail.model.emuns.PreparationMethod;
 import com.cocktails.cocktail.dto.CocktailDetailsDto;
 import com.cocktails.cocktail.dto.CocktailSummaryDto;
