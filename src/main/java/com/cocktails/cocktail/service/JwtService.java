@@ -1,4 +1,4 @@
-package com.cocktails.user.service;
+package com.cocktails.cocktail.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -1,7 +1,7 @@
-package com.cocktails.user.service.impl;
+package com.cocktails.cocktail.service.impl;
 
-import com.cocktails.user.repository.UserRepository;
-import com.cocktails.user.service.UserService;
+import com.cocktails.cocktail.repository.UserRepository;
+import com.cocktails.cocktail.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

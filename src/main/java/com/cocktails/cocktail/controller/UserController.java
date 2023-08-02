@@ -1,9 +1,9 @@
-package com.cocktails.user.controller;
+package com.cocktails.cocktail.controller;
 
-import com.cocktails.user.dao.request.SignUpRequest;
-import com.cocktails.user.dao.request.LogInRequest;
-import com.cocktails.user.dao.response.JwtAuthenticationResponse;
-import com.cocktails.user.service.AuthenticationService;
+import com.cocktails.cocktail.dto.SignUpRequest;
+import com.cocktails.cocktail.dto.LogInRequest;
+import com.cocktails.cocktail.dto.JwtAuthenticationResponse;
+import com.cocktails.cocktail.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

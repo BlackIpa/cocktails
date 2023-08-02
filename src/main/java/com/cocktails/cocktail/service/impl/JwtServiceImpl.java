@@ -1,6 +1,6 @@
-package com.cocktails.user.service.impl;
+package com.cocktails.cocktail.service.impl;
 
-import com.cocktails.user.service.JwtService;
+import com.cocktails.cocktail.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
