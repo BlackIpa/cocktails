@@ -1,4 +1,4 @@
-package com.cocktails.user.dao.request;
+package com.cocktails.cocktail.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.cocktails.user.model.enums;
+package com.cocktails.cocktail.model.emuns;
 
 public enum Role {
 

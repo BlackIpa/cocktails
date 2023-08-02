@@ -1,6 +1,6 @@
-package com.cocktails.config;
+package com.cocktails.cocktail.config;
 
-import com.cocktails.user.service.UserService;
+import com.cocktails.cocktail.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

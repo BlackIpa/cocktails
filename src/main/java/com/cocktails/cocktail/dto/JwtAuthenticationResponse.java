@@ -1,4 +1,4 @@
-package com.cocktails.user.dao.request;
+package com.cocktails.cocktail.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LogInRequest {
+public class JwtAuthenticationResponse {
 
-    private String email;
-    private String password;
-    
+    private String token;
+
 }

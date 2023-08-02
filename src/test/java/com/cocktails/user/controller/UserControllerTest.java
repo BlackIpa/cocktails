@@ -1,8 +1,9 @@
 package com.cocktails.user.controller;
 
-import com.cocktails.user.dao.request.SignUpRequest;
-import com.cocktails.user.dao.response.JwtAuthenticationResponse;
-import com.cocktails.user.service.AuthenticationService;
+import com.cocktails.cocktail.controller.UserController;
+import com.cocktails.cocktail.dto.SignUpRequest;
+import com.cocktails.cocktail.dto.JwtAuthenticationResponse;
+import com.cocktails.cocktail.service.AuthenticationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;

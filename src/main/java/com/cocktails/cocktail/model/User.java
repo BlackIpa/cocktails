@@ -1,6 +1,6 @@
-package com.cocktails.user.model;
+package com.cocktails.cocktail.model;
 
-import com.cocktails.user.model.enums.Role;
+import com.cocktails.cocktail.model.emuns.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

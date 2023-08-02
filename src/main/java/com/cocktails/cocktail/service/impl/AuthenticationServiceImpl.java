@@ -1,13 +1,13 @@
-package com.cocktails.user.service.impl;
+package com.cocktails.cocktail.service.impl;
 
-import com.cocktails.user.dao.request.SignUpRequest;
-import com.cocktails.user.dao.request.LogInRequest;
-import com.cocktails.user.dao.response.JwtAuthenticationResponse;
-import com.cocktails.user.model.User;
-import com.cocktails.user.model.enums.Role;
-import com.cocktails.user.repository.UserRepository;
-import com.cocktails.user.service.AuthenticationService;
-import com.cocktails.user.service.JwtService;
+import com.cocktails.cocktail.dto.SignUpRequest;
+import com.cocktails.cocktail.dto.LogInRequest;
+import com.cocktails.cocktail.dto.JwtAuthenticationResponse;
+import com.cocktails.cocktail.model.User;
+import com.cocktails.cocktail.model.emuns.Role;
+import com.cocktails.cocktail.repository.UserRepository;
+import com.cocktails.cocktail.service.AuthenticationService;
+import com.cocktails.cocktail.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,7 +1,7 @@
-package com.cocktails.config;
+package com.cocktails.cocktail.config;
 
-import com.cocktails.user.service.JwtService;
-import com.cocktails.user.service.UserService;
+import com.cocktails.cocktail.service.JwtService;
+import com.cocktails.cocktail.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
