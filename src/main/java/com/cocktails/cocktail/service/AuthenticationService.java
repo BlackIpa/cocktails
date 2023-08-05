@@ -7,7 +7,7 @@ import com.cocktails.cocktail.dto.JwtAuthenticationResponse;
 
 public interface AuthenticationService {
 
-    JwtAuthenticationResponse signup(SignUpRequest request) throws Exception;
+    JwtAuthenticationResponse signup(SignUpRequest request);
 
     JwtAuthenticationResponse login(LogInRequest request);
 

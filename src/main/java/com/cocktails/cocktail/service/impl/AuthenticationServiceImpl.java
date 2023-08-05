@@ -3,6 +3,8 @@ package com.cocktails.cocktail.service.impl;
 import com.cocktails.cocktail.dto.SignUpRequest;
 import com.cocktails.cocktail.dto.LogInRequest;
 import com.cocktails.cocktail.dto.JwtAuthenticationResponse;
+import com.cocktails.cocktail.exception.DuplicateException;
+import com.cocktails.cocktail.exception.InvalidCredentialsException;
 import com.cocktails.cocktail.model.User;
 import com.cocktails.cocktail.model.emuns.Role;
 import com.cocktails.cocktail.repository.UserRepository;
@@ -10,6 +12,7 @@ import com.cocktails.cocktail.service.AuthenticationService;
 import com.cocktails.cocktail.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +27,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public JwtAuthenticationResponse signup(SignUpRequest request) throws Exception {
+    public JwtAuthenticationResponse signup(SignUpRequest request) {
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -33,7 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(Role.USER)
                 .build();
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new Exception("User with this email already exists");
+            throw new DuplicateException("User with this email already exists");
         }
         userRepository.save(user);
         var jwt = jwtService.generateToken(user);
@@ -42,10 +45,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public JwtAuthenticationResponse login(LogInRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+                .orElseThrow(() -> new InvalidCredentialsException("Provided email is invalid"));
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        } catch (BadCredentialsException e) {
+            throw new InvalidCredentialsException("Provided password is invalid");
+        }
         var jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder().token(jwt).build();
     }
