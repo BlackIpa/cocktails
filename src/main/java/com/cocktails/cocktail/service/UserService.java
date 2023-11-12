@@ -1,8 +1,11 @@
 package com.cocktails.cocktail.service;
 
+import com.cocktails.cocktail.dto.SignUpRequest;
+import com.cocktails.cocktail.dto.UserResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
-    UserDetailsService userDetailsService();
+    UserResponse registerUser(SignUpRequest request);
+
 }
