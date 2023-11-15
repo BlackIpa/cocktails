@@ -1,10 +1,13 @@
 package com.cocktails.cocktail.controller;
 
+import com.cocktails.cocktail.dto.JwtResponse;
+import com.cocktails.cocktail.dto.SignInRequest;
 import com.cocktails.cocktail.dto.SignUpRequest;
 import com.cocktails.cocktail.dto.UserResponse;
 import com.cocktails.cocktail.exception.DuplicateException;
 import com.cocktails.cocktail.exception.InvalidCredentialsException;
 import com.cocktails.cocktail.handler.GlobalExceptionHandler;
+import com.cocktails.cocktail.service.AuthService;
 import com.cocktails.cocktail.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -36,6 +39,9 @@ class UserControllerTest {
     private UserController userController;
 
     @Mock
+    private AuthService authService;
+
+    @Mock
     private UserService userService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -63,7 +69,7 @@ class UserControllerTest {
         when(userService.registerUser(request)).thenReturn(response);
 
         // then
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -87,7 +93,7 @@ class UserControllerTest {
         when(userService.registerUser(request)).thenThrow(new DuplicateException("Email already exists"));
 
         // then
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isConflict())
@@ -96,49 +102,49 @@ class UserControllerTest {
         verify(userService).registerUser(any(SignUpRequest.class));
     }
 
-//    @Test
-//    @SneakyThrows
-//    public void loginShouldReturn() {
-//        // given
-//        LogInRequest request = LogInRequest.builder()
-//                .email("test@email.com")
-//                .password("test")
-//                .build();
-//
-//        JwtAuthenticationResponse response = JwtAuthenticationResponse.builder().token("string").build();
-//
-//        // when
-//        when(authenticationService.login(request)).thenReturn(response);
-//
-//        // then
-//        mockMvc.perform(post("/auth/login")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(request)))
-//                .andExpect(status().isOk());
-//
-//        verify(authenticationService).login(any(LogInRequest.class));
-//    }
-//
-//    @Test
-//    @SneakyThrows
-//    public void loginShouldThrowWhenEmailOrPasswordInvalid() {
-//        // given
-//        LogInRequest request = LogInRequest.builder()
-//                .email("test@email.com")
-//                .password("test")
-//                .build();
-//
-//        // when
-//        when(authenticationService.login(request)).thenThrow(new InvalidCredentialsException("Wrong email"));
-//
-//        // then
-//        mockMvc.perform(post("/auth/login")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(request)))
-//                .andExpect(status().isUnauthorized())
-//                .andExpect(content().string(containsString("Wrong email")));
-//
-//        verify(authenticationService).login(any(LogInRequest.class));
-//    }
+    @Test
+    @SneakyThrows
+    public void loginShouldReturn() {
+        // given
+        SignInRequest request = SignInRequest.builder()
+                .email("test@email.com")
+                .password("test1234")
+                .build();
+
+        JwtResponse response = JwtResponse.builder().token("string").build();
+
+        // when
+        when(authService.authenticateUser(request)).thenReturn(response);
+
+        // then
+        mockMvc.perform(post("/auth/signin")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+
+        verify(authService).authenticateUser(any(SignInRequest.class));
+    }
+
+    @Test
+    @SneakyThrows
+    public void loginShouldThrowWhenEmailOrPasswordInvalid() {
+        // given
+        SignInRequest request = SignInRequest.builder()
+                .email("test@email.com")
+                .password("test")
+                .build();
+
+        // when
+        when(authService.authenticateUser(request)).thenThrow(new InvalidCredentialsException("Wrong email"));
+
+        // then
+        mockMvc.perform(post("/auth/signin")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string(containsString("Wrong email")));
+
+        verify(authService).authenticateUser(any(SignInRequest.class));
+    }
 
 }
