@@ -2,12 +2,14 @@ package com.cocktails.cocktail.controller;
 
 import com.cocktails.cocktail.dto.JwtResponse;
 import com.cocktails.cocktail.dto.SignInRequest;
+import com.cocktails.cocktail.dto.SignOutRequest;
 import com.cocktails.cocktail.dto.SignUpRequest;
 import com.cocktails.cocktail.dto.UserResponse;
 import com.cocktails.cocktail.exception.DuplicateException;
 import com.cocktails.cocktail.exception.InvalidCredentialsException;
 import com.cocktails.cocktail.handler.GlobalExceptionHandler;
 import com.cocktails.cocktail.service.AuthService;
+import com.cocktails.cocktail.service.RefreshTokenService;
 import com.cocktails.cocktail.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -24,6 +26,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,6 +46,9 @@ class UserControllerTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private RefreshTokenService refreshTokenService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -69,7 +75,7 @@ class UserControllerTest {
         when(userService.registerUser(request)).thenReturn(response);
 
         // then
-        mockMvc.perform(post("/auth/signup")
+        mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -93,7 +99,7 @@ class UserControllerTest {
         when(userService.registerUser(request)).thenThrow(new DuplicateException("Email already exists"));
 
         // then
-        mockMvc.perform(post("/auth/signup")
+        mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isConflict())
@@ -117,7 +123,7 @@ class UserControllerTest {
         when(authService.authenticateUser(request)).thenReturn(response);
 
         // then
-        mockMvc.perform(post("/auth/signin")
+        mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
@@ -138,13 +144,53 @@ class UserControllerTest {
         when(authService.authenticateUser(request)).thenThrow(new InvalidCredentialsException("Wrong email"));
 
         // then
-        mockMvc.perform(post("/auth/signin")
+        mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string(containsString("Wrong email")));
 
         verify(authService).authenticateUser(any(SignInRequest.class));
+    }
+
+    @Test
+    @SneakyThrows
+    public void logoutShouldReturn() {
+        // given
+        val token = "token";
+        val request = SignOutRequest.builder()
+                .refreshToken(token)
+                .build();
+
+        // then
+        mockMvc.perform(post("/auth/logout")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+
+        verify(refreshTokenService).deleteRefreshToken(token);
+    }
+
+    @Test
+    @SneakyThrows
+    public void logoutShouldThrowWhenWhenInvalidToken() {
+        // given
+        val token = "token";
+        val request = SignOutRequest.builder()
+                .refreshToken(token)
+                .build();
+
+        // when
+        doThrow(new IllegalArgumentException("Invalid token"))
+                .when(refreshTokenService).deleteRefreshToken(token);
+
+        // then
+        mockMvc.perform(post("/auth/logout")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(content().string(containsString("Invalid token")));
+
+        verify(refreshTokenService).deleteRefreshToken(token);
     }
 
 }
