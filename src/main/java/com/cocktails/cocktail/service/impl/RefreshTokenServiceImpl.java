@@ -20,7 +20,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final JwtUtils jwtUtils;
 
     @Override
-    public void createRefreshToken(User user) {
+    public String createRefreshToken(User user) {
         val token = jwtUtils.generateRefreshToken(user);
         val expiryDate = LocalDateTime.now().plusDays(60);
         val refreshToken = RefreshToken.builder()
@@ -29,6 +29,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .user(user)
                 .build();
         refreshTokenRepository.save(refreshToken);
+        return token;
     }
 
     @Override

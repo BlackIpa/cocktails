@@ -11,12 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignInRequest {
+public class SignOutRequest {
 
-    @Email
-    private String email;
-
-    @NotBlank
-    private String password;
+    private String refreshToken;
 
 }

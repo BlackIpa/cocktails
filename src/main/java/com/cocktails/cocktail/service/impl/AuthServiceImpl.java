@@ -33,11 +33,12 @@ public class AuthServiceImpl implements AuthService {
         val user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
         val jwt = jwtUtils.generateToken(user);
-        val refreshToken = jwtUtils.generateRefreshToken(user);
-        refreshTokenService.createRefreshToken(user);
+        val refreshToken = refreshTokenService.createRefreshToken(user);
+
         return JwtResponse.builder()
                 .token(jwt)
                 .email(user.getEmail())
+                .refreshToken(refreshToken)
                 .build();
     }
 
