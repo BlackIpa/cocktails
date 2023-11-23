@@ -5,6 +5,7 @@ import com.cocktails.cocktail.dto.SignInRequest;
 import com.cocktails.cocktail.dto.SignOutRequest;
 import com.cocktails.cocktail.dto.SignUpRequest;
 import com.cocktails.cocktail.dto.UserResponse;
+import com.cocktails.cocktail.dto.UserUpdateRequest;
 import com.cocktails.cocktail.exception.DuplicateException;
 import com.cocktails.cocktail.exception.InvalidCredentialsException;
 import com.cocktails.cocktail.handler.GlobalExceptionHandler;
@@ -22,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -29,12 +31,14 @@ import java.security.Principal;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -233,4 +237,62 @@ class UserControllerTest {
                 .andExpect(content().string(containsString("User not found")));
         verify(userService).getUserDetails(email);
     }
+
+    @Test
+    @SneakyThrows
+    public void updateUserShouldReturn() {
+        // given
+        val email = "test@email.com";
+        val principal = mock(Principal.class);
+        val updateRequest = UserUpdateRequest.builder()
+                .firstName("first")
+                .lastName("last")
+                .build();
+        val updatedUserResponse = UserResponse.builder()
+                .email(email)
+                .firstName(updateRequest.getFirstName())
+                .lastName(updateRequest.getLastName())
+                .build();
+
+        // when
+        when(principal.getName()).thenReturn(email);
+        when(userService.updateUser(email, updateRequest)).thenReturn(updatedUserResponse);
+
+        // then
+        mockMvc.perform(put("/user/update")
+                        .principal(principal)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(updateRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("first"))
+                .andExpect(jsonPath("$.lastName").value("last"))
+                .andExpect(jsonPath("$.email").value(email));
+        verify(userService).updateUser(eq(email), any(UserUpdateRequest.class));
+    }
+
+    @Test
+    @SneakyThrows
+    public void updateUserShouldThrowIfUserNotFound() {
+        // given
+        val email = "test@email.com";
+        val principal = mock(Principal.class);
+        val updateRequest = UserUpdateRequest.builder()
+                .firstName("first")
+                .lastName("last")
+                .build();
+
+        // when
+        when(principal.getName()).thenReturn(email);
+        when(userService.updateUser(email, updateRequest)).thenThrow(new UsernameNotFoundException("User not found"));
+
+        // then
+        mockMvc.perform(put("/user/update")
+                        .principal(principal)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(updateRequest)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("User not found")));
+        verify(userService).updateUser(eq(email), any(UserUpdateRequest.class));
+    }
+
 }

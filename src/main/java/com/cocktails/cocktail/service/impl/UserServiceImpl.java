@@ -2,6 +2,7 @@ package com.cocktails.cocktail.service.impl;
 
 import com.cocktails.cocktail.dto.SignUpRequest;
 import com.cocktails.cocktail.dto.UserResponse;
+import com.cocktails.cocktail.dto.UserUpdateRequest;
 import com.cocktails.cocktail.exception.DuplicateException;
 import com.cocktails.cocktail.model.User;
 import com.cocktails.cocktail.model.emuns.Role;
@@ -56,6 +57,16 @@ public class UserServiceImpl implements UserService {
                 .firstName(savedUser.getFirstName())
                 .lastName(savedUser.getLastName())
                 .build();
+    }
+
+    @Override
+    public UserResponse updateUser(String email, UserUpdateRequest request) {
+        val user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        userRepository.save(user);
+        return userMapper.userToUserResponse(user);
     }
 
 }
