@@ -14,14 +14,17 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 @Slf4j
-@RequestMapping("/auth")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -64,6 +67,14 @@ public class UserController {
         log.info("Refreshing access token");
         val jwtResponse = authService.refreshToken(refreshTokenRequest);
         return ResponseEntity.ok(jwtResponse);
+    }
+
+    @GetMapping("/details")
+    public ResponseEntity<UserResponse> getUserDetails(Principal principal) {
+        log.info("See account details");
+        val email = principal.getName();
+        val user = userService.getUserDetails(email);
+        return ResponseEntity.ok(user);
     }
 
 }

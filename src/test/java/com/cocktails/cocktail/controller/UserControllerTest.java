@@ -21,16 +21,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.security.Principal;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -75,12 +81,11 @@ class UserControllerTest {
         when(userService.registerUser(request)).thenReturn(response);
 
         // then
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
-
         verify(userService).registerUser(any(SignUpRequest.class));
     }
 
@@ -99,12 +104,11 @@ class UserControllerTest {
         when(userService.registerUser(request)).thenThrow(new DuplicateException("Email already exists"));
 
         // then
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isConflict())
                 .andExpect(content().string(containsString("Email already exists")));
-
         verify(userService).registerUser(any(SignUpRequest.class));
     }
 
@@ -123,11 +127,10 @@ class UserControllerTest {
         when(authService.authenticateUser(request)).thenReturn(response);
 
         // then
-        mockMvc.perform(post("/auth/login")
+        mockMvc.perform(post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
-
         verify(authService).authenticateUser(any(SignInRequest.class));
     }
 
@@ -144,12 +147,11 @@ class UserControllerTest {
         when(authService.authenticateUser(request)).thenThrow(new InvalidCredentialsException("Wrong email"));
 
         // then
-        mockMvc.perform(post("/auth/login")
+        mockMvc.perform(post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string(containsString("Wrong email")));
-
         verify(authService).authenticateUser(any(SignInRequest.class));
     }
 
@@ -163,11 +165,10 @@ class UserControllerTest {
                 .build();
 
         // then
-        mockMvc.perform(post("/auth/logout")
+        mockMvc.perform(post("/user/logout")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
-
         verify(refreshTokenService).deleteRefreshToken(token);
     }
 
@@ -185,12 +186,51 @@ class UserControllerTest {
                 .when(refreshTokenService).deleteRefreshToken(token);
 
         // then
-        mockMvc.perform(post("/auth/logout")
+        mockMvc.perform(post("/user/logout")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(content().string(containsString("Invalid token")));
-
         verify(refreshTokenService).deleteRefreshToken(token);
     }
 
+    @Test
+    @SneakyThrows
+    public void getUserDetailsShouldReturn() {
+        // given
+        val email = "test@email.com";
+        val principal = mock(Principal.class);
+        val userResponse = UserResponse.builder().email(email).build();
+
+        // when
+        when(principal.getName()).thenReturn(email);
+        when(userService.getUserDetails(email)).thenReturn(userResponse);
+
+        // then
+        mockMvc.perform(get("/user/details")
+                        .principal(principal)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value(email));
+        verify(userService).getUserDetails(email);
+    }
+
+    @Test
+    @SneakyThrows
+    public void getUserDetailsShouldThrowIfUserNotFound() {
+        // given
+        val email = "test@email.com";
+        val principal = mock(Principal.class);
+
+        // when
+        when(principal.getName()).thenReturn(email);
+        when(userService.getUserDetails(email)).thenThrow(new UsernameNotFoundException("User not found"));
+
+        // then
+        mockMvc.perform(get("/user/details")
+                        .principal(principal)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("User not found")));
+        verify(userService).getUserDetails(email);
+    }
 }

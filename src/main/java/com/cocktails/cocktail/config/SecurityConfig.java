@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/cocktails/2").authenticated()
+                        .requestMatchers("/user/details").authenticated()
                         .anyRequest().permitAll()
                 )
                 .authenticationProvider(authenticationProvider())
