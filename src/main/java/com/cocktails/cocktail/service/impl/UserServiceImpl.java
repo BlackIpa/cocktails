@@ -7,6 +7,7 @@ import com.cocktails.cocktail.model.User;
 import com.cocktails.cocktail.model.emuns.Role;
 import com.cocktails.cocktail.repository.UserRepository;
 import com.cocktails.cocktail.service.UserService;
+import com.cocktails.cocktail.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,13 +19,23 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final UserMapper userMapper;
+
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
         return userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    @Override
+    public UserResponse getUserDetails(String email) {
+        val user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userMapper.userToUserResponse(user);
     }
 
     @Override
