@@ -18,10 +18,10 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
 
     @Query("SELECT new com.cocktails.cocktail.dto.CocktailSummaryDto(c.id, c.name, c.preparationMethod, g.iconName) " +
             "FROM Cocktail c JOIN c.glass g " +
-            "WHERE LOWER(c.name) LIKE LOWER(concat('%', :keyword, '%'))")
-    List<CocktailSummaryDto> findByName(@Param("keyword") String keyword);
+            "WHERE LOWER(c.name) LIKE LOWER(concat('%', :cocktailName, '%'))")
+    List<CocktailSummaryDto> findByName(@Param("cocktailName") String cocktailName);
 
-    @Query("SELECT c.name FROM Cocktail c WHERE LOWER(c.name) LIKE %:keyword%")
-    List<String> findByNamePart(@Param("keyword") String keyword);
+    @Query("SELECT c.name FROM Cocktail c WHERE LOWER(c.name) LIKE %:cocktailName%")
+    List<String> findByNamePart(@Param("cocktailName") String cocktailName);
 
 }

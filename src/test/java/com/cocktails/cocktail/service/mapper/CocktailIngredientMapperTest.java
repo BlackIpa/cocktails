@@ -5,7 +5,6 @@ import com.cocktails.cocktail.model.Ingredient;
 import com.cocktails.cocktail.model.emuns.IngredientType;
 import com.cocktails.cocktail.model.emuns.Unit;
 import com.cocktails.cocktail.dto.IngredientDto;
-import com.cocktails.cocktail.service.mapper.CocktailIngredientMapper;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,11 +24,7 @@ public class CocktailIngredientMapperTest {
 
     @Test
     public void cocktailIngredientToDto_ShouldReturnResult() {
-
-        val ingredient = new Ingredient();
-        ingredient.setId(1L);
-        ingredient.setName("Vodka");
-        ingredient.setType(IngredientType.SPIRIT);
+        val ingredient = Ingredient.builder().id(1L).name("Vodka").type(IngredientType.SPIRIT).build();
 
         val cocktailIngredient = new CocktailIngredient();
         cocktailIngredient.setId(1L);

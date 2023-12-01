@@ -1,7 +1,11 @@
 package com.cocktails.cocktail.model;
 
 import com.cocktails.cocktail.model.emuns.IngredientType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import jakarta.persistence.*;
@@ -10,8 +14,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "ingredients")
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ingredient {
 
     @Id
@@ -26,7 +32,7 @@ public class Ingredient {
     @Column(name = "type")
     private IngredientType type;
 
-    @OneToMany(mappedBy = "ingredient", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL)
     private List<CocktailIngredient> cocktailIngredients = new ArrayList<>();
 
 }

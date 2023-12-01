@@ -7,9 +7,6 @@ import com.cocktails.cocktail.model.Ingredient;
 import com.cocktails.cocktail.model.Step;
 import com.cocktails.cocktail.model.emuns.IngredientType;
 import com.cocktails.cocktail.model.emuns.PreparationMethod;
-import com.cocktails.cocktail.service.mapper.CocktailIngredientMapper;
-import com.cocktails.cocktail.service.mapper.CocktailMapper;
-import com.cocktails.cocktail.service.mapper.CocktailStepMapper;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,9 +46,7 @@ class CocktailMapperTest {
         List<CocktailIngredient> cocktailIngredients = new ArrayList<>();
         val cocktailIngredient = new CocktailIngredient();
         cocktailIngredient.setQuantity(BigDecimal.valueOf(2));
-        val ingredient = new Ingredient();
-        ingredient.setName("Vodka");
-        ingredient.setType(IngredientType.SPIRIT);
+        val ingredient = Ingredient.builder().name("Vodka").type(IngredientType.SPIRIT).build();
         cocktailIngredient.setIngredient(ingredient);
         cocktailIngredients.add(cocktailIngredient);
 

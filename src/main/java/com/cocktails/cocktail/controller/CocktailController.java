@@ -3,6 +3,7 @@ package com.cocktails.cocktail.controller;
 import com.cocktails.cocktail.dto.CocktailDetailsDto;
 import com.cocktails.cocktail.dto.CocktailSummaryDto;
 import com.cocktails.cocktail.service.impl.CocktailServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +16,10 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/cocktails")
 @Slf4j
+@RequiredArgsConstructor
 public class CocktailController {
 
     private final CocktailServiceImpl cocktailService;
-
-    public CocktailController(CocktailServiceImpl cocktailService) {
-        this.cocktailService = cocktailService;
-    }
 
     @GetMapping
     public ResponseEntity<List<CocktailSummaryDto>> findCocktails(@RequestParam(required = false) String name) {
