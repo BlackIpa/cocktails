@@ -34,7 +34,6 @@ public class Cocktail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "glass_id")
-//    @JsonIgnore
     private Glass glass;
 
 }

@@ -6,14 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Map;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class IngredientDto {
+public class GroupedIngredientsDto {
 
-    private Long id;
-    private String name;
-    private IngredientType type;
+    private Map<IngredientType, List<IngredientDto>> ingredientsGroupedByType;
 
 }

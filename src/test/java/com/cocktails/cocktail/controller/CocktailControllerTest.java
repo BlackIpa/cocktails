@@ -31,11 +31,11 @@ class CocktailControllerTest {
 
     private MockMvc mockMvc;
 
-    @InjectMocks
-    private CocktailController cocktailController;
-
     @Mock
     private CocktailServiceImpl cocktailService;
+
+    @InjectMocks
+    private CocktailController cocktailController;
 
     @BeforeEach
     public void setUp() {
@@ -45,7 +45,6 @@ class CocktailControllerTest {
     @Test
     @SneakyThrows
     public void findCocktails_ShouldReturnResult() {
-
         // given
         val cocktails = Arrays.asList(
                 new CocktailSummaryDto(1L, "Casino", PreparationMethod.STIRRED, "highball-icon"),
@@ -71,7 +70,6 @@ class CocktailControllerTest {
     @Test
     @SneakyThrows
     public void findCocktails_ShouldReturnResult_whenRequestParamProvided() {
-
         // given
         val keyword = "whi";
         val cocktails = Arrays.asList(
@@ -93,7 +91,6 @@ class CocktailControllerTest {
     @Test
     @SneakyThrows
     public void findById_ShouldReturnResult() {
-
         // given
         val id = 1L;
         val cocktailDetailsDto = new CocktailDetailsDto(id, "Casino", PreparationMethod.STIRRED,
@@ -117,7 +114,6 @@ class CocktailControllerTest {
     @Test
     @SneakyThrows
     public void findById_ShouldThrow() {
-
         // given
         val id = 1L;
         when(cocktailService.findById(id)).thenThrow(new EntityNotFoundException("Not found"));
@@ -132,7 +128,6 @@ class CocktailControllerTest {
     @Test
     @SneakyThrows
     public void findByNamePart_ShouldReturnResult() {
-
         // given
         val keyword = "whi";
         val names = Arrays.asList("Whiskey Sour","Whiskey Smash");

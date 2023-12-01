@@ -1,4 +1,4 @@
-package com.cocktails.cocktail.service;
+package com.cocktails.cocktail.service.impl;
 
 import com.cocktails.cocktail.model.Cocktail;
 import com.cocktails.cocktail.model.emuns.PreparationMethod;
@@ -26,18 +26,17 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CocktailServiceImplTest {
 
-    @InjectMocks
-    private CocktailServiceImpl cocktailService;
-
     @Mock
     private CocktailRepository cocktailRepository;
 
     @Mock
     private CocktailMapper cocktailMapper;
 
+    @InjectMocks
+    private CocktailServiceImpl cocktailService;
+
     @Test
     public void readAll_ShouldReturnResult() {
-
         // given
         val cocktail = new CocktailSummaryDto(1L, "Casino", PreparationMethod.STIRRED, "highball-icon");
         when(cocktailRepository.findAllSummaries()).thenReturn(List.of(cocktail));
@@ -55,7 +54,6 @@ public class CocktailServiceImplTest {
 
     @Test
     public void findById_ShouldReturnResult() {
-
         // given
         val id = 1L;
         val cocktail = new Cocktail();
@@ -74,7 +72,6 @@ public class CocktailServiceImplTest {
 
     @Test
     public void findById_ShouldThrow() {
-
         // given
         val id = 1L;
         when(cocktailRepository.findById(id)).thenReturn(Optional.empty());
@@ -85,7 +82,6 @@ public class CocktailServiceImplTest {
 
     @Test
     public void findByName_ShouldReturnResult() {
-
         // given
         String keyword = "whi";
         val summary1 = new CocktailSummaryDto(1L, "Whiskey Smash", PreparationMethod.STIRRED, "highball-icon");
@@ -103,7 +99,6 @@ public class CocktailServiceImplTest {
 
     @Test
     public void findByName_ShouldReturnEmptyList() {
-
         // given
         String keyword = "wh";
 
@@ -116,7 +111,6 @@ public class CocktailServiceImplTest {
 
     @Test
     public void findByNamePart_ShouldReturnResult() {
-
         // given
         String keyword = "whi";
         val names = Arrays.asList("Whiskey Sour", "Whiskey Smash");
@@ -132,7 +126,6 @@ public class CocktailServiceImplTest {
 
     @Test
     public void findByNamePart_ShouldReturnEmptyList() {
-
         // given
         String keyword = "wh";
 

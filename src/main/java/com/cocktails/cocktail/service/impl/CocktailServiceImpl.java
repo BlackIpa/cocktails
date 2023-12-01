@@ -8,6 +8,7 @@ import com.cocktails.cocktail.service.CocktailService;
 import com.cocktails.cocktail.service.mapper.CocktailMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -22,7 +23,11 @@ public class CocktailServiceImpl implements CocktailService {
 
     @Override
     public List<CocktailSummaryDto> readAll() {
-        return cocktailRepository.findAllSummaries();
+        val cocktailsSummaries =  cocktailRepository.findAllSummaries();
+        if (cocktailsSummaries.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return cocktailsSummaries;
     }
 
     @Override
@@ -33,19 +38,19 @@ public class CocktailServiceImpl implements CocktailService {
     }
 
     @Override
-    public List<String> findByNamePart(String keyword) {
-        if (keyword == null || keyword.length() < 3) {
+    public List<CocktailSummaryDto> findByName(String cocktailName) {
+        if (cocktailName == null || cocktailName.length() < 3) {
             return Collections.emptyList();
         }
-        return cocktailRepository.findByNamePart(keyword);
+        return cocktailRepository.findByName(cocktailName);
     }
 
     @Override
-    public List<CocktailSummaryDto> findByName(String keyword) {
-        if (keyword == null || keyword.length() < 3) {
+    public List<String> findByNamePart(String cocktailName) {
+        if (cocktailName == null || cocktailName.length() < 3) {
             return Collections.emptyList();
         }
-        return cocktailRepository.findByName(keyword);
+        return cocktailRepository.findByNamePart(cocktailName);
     }
 
 }
