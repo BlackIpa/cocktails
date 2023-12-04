@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +25,7 @@ public class IngredientServiceImpl implements IngredientService {
     public GroupedIngredientsDto findAllIngredientsGroupedByType() {
         val ingredients = ingredientRepository.findAll();
         if (ingredients.isEmpty()) {
-            return GroupedIngredientsDto.builder().build();
+            return GroupedIngredientsDto.builder().ingredientsGroupedByType(new HashMap<>()).build();
         }
         val groupedByType = ingredients.stream()
                 .map(ingredientMapper::ingredientToDto)
@@ -31,4 +33,15 @@ public class IngredientServiceImpl implements IngredientService {
         return GroupedIngredientsDto.builder().ingredientsGroupedByType(groupedByType).build();
     }
 
+    @Override
+    public GroupedIngredientsDto findIngredientsByNamePart(String ingredientName) {
+        if (ingredientName.length() < 3) {
+            return GroupedIngredientsDto.builder().ingredientsGroupedByType(new HashMap<>()).build();
+        }
+        val ingredients = ingredientRepository.findByNameContainingIgnoreCase(ingredientName);
+        val groupedByType = ingredients.stream()
+                .map(ingredientMapper::ingredientToDto)
+                .collect(Collectors.groupingBy(IngredientDto::getType));
+        return GroupedIngredientsDto.builder().ingredientsGroupedByType(groupedByType).build();
+    }
 }

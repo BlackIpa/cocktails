@@ -91,7 +91,7 @@ public class CocktailServiceImplTest {
         when(cocktailRepository.findByName(keyword)).thenReturn(summaries);
 
         // when
-        val result = cocktailService.findByName(keyword);
+        val result = cocktailService.findCocktailsByName(keyword);
 
         // then
         assertEquals(summaries, result);
@@ -103,7 +103,7 @@ public class CocktailServiceImplTest {
         String keyword = "wh";
 
         // when
-        val result = cocktailService.findByName(keyword);
+        val result = cocktailService.findCocktailsByName(keyword);
 
         // then
         assertEquals(Collections.emptyList(), result);
@@ -118,7 +118,7 @@ public class CocktailServiceImplTest {
         when(cocktailRepository.findByNamePart(keyword)).thenReturn(names);
 
         // when
-        val result = cocktailService.findByNamePart(keyword);
+        val result = cocktailService.findCocktailsByNamePart(keyword);
 
         // then
         assertEquals(names, result);
@@ -130,7 +130,7 @@ public class CocktailServiceImplTest {
         String keyword = "wh";
 
         // when
-        val result = cocktailService.findByNamePart(keyword);
+        val result = cocktailService.findCocktailsByNamePart(keyword);
 
         // then
         assertEquals(Collections.emptyList(), result);

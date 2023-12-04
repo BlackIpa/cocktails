@@ -75,7 +75,7 @@ class CocktailControllerTest {
         val cocktails = Arrays.asList(
                 new CocktailSummaryDto(1L, "Whiskey Sour", PreparationMethod.STIRRED, "highball-icon"),
                 new CocktailSummaryDto(2L, "Whiskey Smash", PreparationMethod.STIRRED, "martini-icon"));
-        when(cocktailService.findByName(keyword)).thenReturn(cocktails);
+        when(cocktailService.findCocktailsByName(keyword)).thenReturn(cocktails);
 
         // when & then
         mockMvc.perform(get("/cocktails")
@@ -85,12 +85,12 @@ class CocktailControllerTest {
                 .andExpect(jsonPath("$[0].name", is("Whiskey Sour")))
                 .andExpect(jsonPath("$[1].name", is("Whiskey Smash")));
 
-        verify(cocktailService, times(1)).findByName(keyword);
+        verify(cocktailService, times(1)).findCocktailsByName(keyword);
     }
 
     @Test
     @SneakyThrows
-    public void findById_ShouldReturnResult() {
+    public void findCocktailById_ShouldReturnResult() {
         // given
         val id = 1L;
         val cocktailDetailsDto = new CocktailDetailsDto(id, "Casino", PreparationMethod.STIRRED,
@@ -113,7 +113,7 @@ class CocktailControllerTest {
 
     @Test
     @SneakyThrows
-    public void findById_ShouldThrow() {
+    public void findCocktailById_ShouldThrow() {
         // given
         val id = 1L;
         when(cocktailService.findById(id)).thenThrow(new EntityNotFoundException("Not found"));
@@ -127,21 +127,21 @@ class CocktailControllerTest {
 
     @Test
     @SneakyThrows
-    public void findByNamePart_ShouldReturnResult() {
+    public void findCocktailsByNamePart_ShouldReturnResult() {
         // given
         val keyword = "whi";
         val names = Arrays.asList("Whiskey Sour","Whiskey Smash");
-        when(cocktailService.findByNamePart(keyword)).thenReturn(names);
+        when(cocktailService.findCocktailsByNamePart(keyword)).thenReturn(names);
 
         // when & then
-        mockMvc.perform(get("/cocktails/name")
+        mockMvc.perform(get("/cocktails/search")
                         .param("name", keyword))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0]", is("Whiskey Sour")))
                 .andExpect(jsonPath("$[1]", is("Whiskey Smash")));
 
-        verify(cocktailService, times(1)).findByNamePart(keyword);
+        verify(cocktailService, times(1)).findCocktailsByNamePart(keyword);
     }
 
 }
