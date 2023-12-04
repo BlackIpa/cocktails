@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -52,14 +54,7 @@ class IngredientControllerTest {
         mockMvc.perform(get("/ingredients"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ingredientsGroupedByType").exists())
-                .andExpect(jsonPath("$.ingredientsGroupedByType.SPIRIT[0].name").value("Vodka")); // Example assertion
-    }
-
-    private GroupedIngredientsDto createMockGroupedIngredientsDto() {
-        Map<IngredientType, List<IngredientDto>> groupedIngredients = new HashMap<>();
-        groupedIngredients.put(IngredientType.SPIRIT, Collections.singletonList(new IngredientDto(1L, "Vodka", IngredientType.SPIRIT)));
-
-        return new GroupedIngredientsDto(groupedIngredients);
+                .andExpect(jsonPath("$.ingredientsGroupedByType.SPIRIT[0].name").value("Vodka"));
     }
 
     @Test
@@ -75,4 +70,26 @@ class IngredientControllerTest {
                 .andExpect(jsonPath("$.ingredientsGroupedByType").isEmpty());
     }
 
+    @Test
+    @SneakyThrows
+    public void findIngredientsByNamePart_ShouldReturnResult() {
+        // given
+        val keyword = "wod";
+        val mockResponse = createMockGroupedIngredientsDto();
+        when(ingredientService.findIngredientsByNamePart(keyword)).thenReturn(mockResponse);
+
+        // when & then
+        mockMvc.perform(get("/ingredients/search")
+                        .param("name", keyword))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ingredientsGroupedByType").exists())
+                .andExpect(jsonPath("$.ingredientsGroupedByType.SPIRIT[0].name").value("Vodka"));
+    }
+
+    private GroupedIngredientsDto createMockGroupedIngredientsDto() {
+        Map<IngredientType, List<IngredientDto>> groupedIngredients = new HashMap<>();
+        groupedIngredients.put(IngredientType.SPIRIT, Collections.singletonList(new IngredientDto(1L, "Vodka", IngredientType.SPIRIT)));
+
+        return new GroupedIngredientsDto(groupedIngredients);
+    }
 }

@@ -11,7 +11,7 @@ public interface CocktailService {
 
     CocktailDetailsDto findById(Long id);
 
-    List<CocktailSummaryDto> findByName(String keyword);
+    List<CocktailSummaryDto> findCocktailsByName(String cocktailName);
 
-    List<String> findByNamePart(String keyword);
+    List<String> findCocktailsByNamePart(String cocktailName);
 }

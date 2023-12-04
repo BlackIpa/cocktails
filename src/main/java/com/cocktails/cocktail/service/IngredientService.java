@@ -6,4 +6,6 @@ public interface IngredientService {
 
     GroupedIngredientsDto findAllIngredientsGroupedByType();
 
+    GroupedIngredientsDto findIngredientsByNamePart(String ingredientName);
+
 }

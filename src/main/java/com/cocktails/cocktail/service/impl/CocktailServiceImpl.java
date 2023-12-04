@@ -38,7 +38,7 @@ public class CocktailServiceImpl implements CocktailService {
     }
 
     @Override
-    public List<CocktailSummaryDto> findByName(String cocktailName) {
+    public List<CocktailSummaryDto> findCocktailsByName(String cocktailName) {
         if (cocktailName == null || cocktailName.length() < 3) {
             return Collections.emptyList();
         }
@@ -46,7 +46,7 @@ public class CocktailServiceImpl implements CocktailService {
     }
 
     @Override
-    public List<String> findByNamePart(String cocktailName) {
+    public List<String> findCocktailsByNamePart(String cocktailName) {
         if (cocktailName == null || cocktailName.length() < 3) {
             return Collections.emptyList();
         }

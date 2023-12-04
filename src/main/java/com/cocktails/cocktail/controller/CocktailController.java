@@ -26,14 +26,14 @@ public class CocktailController {
         log.info("Show cocktails list");
         final List<CocktailSummaryDto> cocktailsList = name == null
                 ? cocktailService.readAll()
-                : cocktailService.findByName(name);
+                : cocktailService.findCocktailsByName(name);
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS))
                 .body(cocktailsList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CocktailDetailsDto> findById(@PathVariable Long id) {
+    public ResponseEntity<CocktailDetailsDto> findCocktailById(@PathVariable Long id) {
         log.info("Find cocktail by id");
         try {
             CocktailDetailsDto cocktailDetailsDto = cocktailService.findById(id);
@@ -43,10 +43,10 @@ public class CocktailController {
         }
     }
 
-    @GetMapping("/name")
-    public ResponseEntity<List<String>> findByNamePart(@RequestParam String name) {
+    @GetMapping("/search")
+    public ResponseEntity<List<String>> findCocktailsByNamePart(@RequestParam String name) {
         log.info("Display cocktails which contain " + name + " in name");
-        return ResponseEntity.ok(cocktailService.findByNamePart(name));
+        return ResponseEntity.ok(cocktailService.findCocktailsByNamePart(name));
     }
 
 }
