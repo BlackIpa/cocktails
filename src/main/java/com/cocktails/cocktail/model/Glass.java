@@ -1,5 +1,6 @@
 package com.cocktails.cocktail.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import jakarta.persistence.*;
 @Table(name = "glasses")
 @Getter
 @Setter
+@AllArgsConstructor
 public class Glass {
 
     @Id

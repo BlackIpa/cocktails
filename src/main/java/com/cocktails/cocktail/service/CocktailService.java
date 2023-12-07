@@ -14,4 +14,7 @@ public interface CocktailService {
     List<CocktailSummaryDto> findCocktailsByName(String cocktailName);
 
     List<String> findCocktailsByNamePart(String cocktailName);
+
+    List<CocktailSummaryDto> findCocktailsByIngredient(String ingredientName);
+
 }

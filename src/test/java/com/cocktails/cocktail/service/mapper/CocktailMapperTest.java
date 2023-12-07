@@ -10,6 +10,10 @@ import com.cocktails.cocktail.model.emuns.PreparationMethod;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,32 +21,22 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(MockitoExtension.class)
 class CocktailMapperTest {
 
-    private CocktailMapper cocktailMapper;
+    @Mock
+    private CocktailIngredientMapper cocktailIngredientMapper;
 
-    @BeforeEach
-    public void setUp() {
-        cocktailMapper = new CocktailMapper(new CocktailIngredientMapper(), new CocktailStepMapper());
-    }
+    @Mock
+    private CocktailStepMapper stepMapper;
+
+    @InjectMocks
+    private CocktailMapper cocktailMapper;
 
     @Test
     public void cocktailToDetailsDto_ShouldReturnResult() {
-
         // given
-        val id = 1L;
-        val cocktail = new Cocktail();
-        cocktail.setId(id);
-        cocktail.setName("Casino");
-        cocktail.setPreparationMethod(PreparationMethod.STIRRED);
-
-        val glass = new Glass();
-        glass.setId(id);
-        glass.setName("Highball");
-        glass.setIconName("highball-icon");
-
-        cocktail.setGlass(glass);
-
+        val cocktail = createCocktail("Whiskey Sour");
         List<CocktailIngredient> cocktailIngredients = new ArrayList<>();
         val cocktailIngredient = new CocktailIngredient();
         cocktailIngredient.setQuantity(BigDecimal.valueOf(2));
@@ -68,6 +62,23 @@ class CocktailMapperTest {
         assertEquals(cocktailDetailsDto.getGlassName(), cocktail.getGlass().getName());
         assertEquals(cocktailDetailsDto.getCocktailIngredientsDto().size(), cocktailIngredients.size());
         assertEquals(cocktailDetailsDto.getStepsDto().size(), cocktail.getSteps().size());
+    }
+
+    @Test
+    public void cocktailToSummaryDto_ShouldReturnResult() {
+        val cocktail = createCocktail("Martini");
+
+        val cocktailSummaryDto = cocktailMapper.cocktailToSummaryDto(cocktail);
+
+        assertEquals(cocktail.getId(), cocktailSummaryDto.getId());
+        assertEquals(cocktail.getName(), cocktailSummaryDto.getName());
+        assertEquals(cocktail.getPreparationMethod(), cocktailSummaryDto.getPreparationMethod());
+        assertEquals(cocktail.getGlass().getIconName(), cocktailSummaryDto.getGlassIcon());
+    }
+
+    private Cocktail createCocktail(final String name) {
+        val glass = new Glass(1L, "name", "icon");
+        return new Cocktail(1L, List.of(), name, List.of(), PreparationMethod.STIRRED, glass);
     }
 
 }

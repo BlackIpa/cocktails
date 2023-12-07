@@ -49,4 +49,10 @@ public class CocktailController {
         return ResponseEntity.ok(cocktailService.findCocktailsByNamePart(name));
     }
 
+    @GetMapping("/ingredient")
+    public ResponseEntity<List<CocktailSummaryDto>> findCocktailsByIngredient(@RequestParam String name) {
+        log.info("Display cocktails which contain " + name + " in name");
+        return ResponseEntity.ok(cocktailService.findCocktailsByIngredient(name));
+    }
+
 }
