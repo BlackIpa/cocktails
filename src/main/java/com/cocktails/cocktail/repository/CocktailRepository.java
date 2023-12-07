@@ -24,4 +24,6 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
     @Query("SELECT c.name FROM Cocktail c WHERE LOWER(c.name) LIKE %:cocktailName%")
     List<String> findByNamePart(@Param("cocktailName") String cocktailName);
 
+    List<Cocktail> findByCocktailIngredients_Ingredient_NameIgnoreCase(String ingredientName);
+
 }

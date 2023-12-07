@@ -16,8 +16,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import jakarta.persistence.EntityNotFoundException;
+
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -46,9 +48,7 @@ class CocktailControllerTest {
     @SneakyThrows
     public void findCocktails_ShouldReturnResult() {
         // given
-        val cocktails = Arrays.asList(
-                new CocktailSummaryDto(1L, "Casino", PreparationMethod.STIRRED, "highball-icon"),
-                new CocktailSummaryDto(2L, "Martini", PreparationMethod.STIRRED, "martini-icon"));
+        val cocktails = createCocktailSummaryDtoList();
         when(cocktailService.readAll()).thenReturn(cocktails);
 
         // when & then
@@ -56,11 +56,11 @@ class CocktailControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].name", is("Casino")))
+                .andExpect(jsonPath("$[0].name", is("Whiskey Sour")))
                 .andExpect(jsonPath("$[0].preparationMethod", is(PreparationMethod.STIRRED.name())))
                 .andExpect(jsonPath("$[0].glassIcon", is("highball-icon")))
                 .andExpect(jsonPath("$[1].id", is(2)))
-                .andExpect(jsonPath("$[1].name", is("Martini")))
+                .andExpect(jsonPath("$[1].name", is("Whiskey Smash")))
                 .andExpect(jsonPath("$[1].preparationMethod", is(PreparationMethod.STIRRED.name())))
                 .andExpect(jsonPath("$[1].glassIcon", is("martini-icon")));
 
@@ -72,9 +72,7 @@ class CocktailControllerTest {
     public void findCocktails_ShouldReturnResult_whenRequestParamProvided() {
         // given
         val keyword = "whi";
-        val cocktails = Arrays.asList(
-                new CocktailSummaryDto(1L, "Whiskey Sour", PreparationMethod.STIRRED, "highball-icon"),
-                new CocktailSummaryDto(2L, "Whiskey Smash", PreparationMethod.STIRRED, "martini-icon"));
+        val cocktails = createCocktailSummaryDtoList();
         when(cocktailService.findCocktailsByName(keyword)).thenReturn(cocktails);
 
         // when & then
@@ -130,7 +128,7 @@ class CocktailControllerTest {
     public void findCocktailsByNamePart_ShouldReturnResult() {
         // given
         val keyword = "whi";
-        val names = Arrays.asList("Whiskey Sour","Whiskey Smash");
+        val names = Arrays.asList("Whiskey Sour", "Whiskey Smash");
         when(cocktailService.findCocktailsByNamePart(keyword)).thenReturn(names);
 
         // when & then
@@ -142,6 +140,31 @@ class CocktailControllerTest {
                 .andExpect(jsonPath("$[1]", is("Whiskey Smash")));
 
         verify(cocktailService, times(1)).findCocktailsByNamePart(keyword);
+    }
+
+    @Test
+    @SneakyThrows
+    public void findCocktailsByIngredient_ShouldReturnResult() {
+        // given
+        val keyword = "whi";
+        val cocktails = createCocktailSummaryDtoList();
+        when(cocktailService.findCocktailsByIngredient(keyword)).thenReturn(cocktails);
+
+        // when & then
+        mockMvc.perform(get("/cocktails/ingredient")
+                        .param("name", keyword))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].name", is("Whiskey Sour")))
+                .andExpect(jsonPath("$[1].name", is("Whiskey Smash")));
+        verify(cocktailService, times(1)).findCocktailsByIngredient(keyword);
+    }
+
+    private List<CocktailSummaryDto> createCocktailSummaryDtoList() {
+        return Arrays.asList(
+                new CocktailSummaryDto(1L, "Whiskey Sour", PreparationMethod.STIRRED, "highball-icon"),
+                new CocktailSummaryDto(2L, "Whiskey Smash", PreparationMethod.STIRRED, "martini-icon")
+        );
     }
 
 }

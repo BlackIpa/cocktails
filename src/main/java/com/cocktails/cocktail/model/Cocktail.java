@@ -1,7 +1,9 @@
 package com.cocktails.cocktail.model;
 
 import com.cocktails.cocktail.model.emuns.PreparationMethod;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import jakarta.persistence.*;
@@ -12,6 +14,8 @@ import java.util.List;
 @Table(name = "cocktails")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cocktail {
 
     @Id
