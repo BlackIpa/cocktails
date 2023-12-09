@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -25,6 +27,16 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     private final UserRepository userRepository;
+
+    @Override
+    public void deleteUser(Long id, String email) throws AccessDeniedException {
+        val user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        if (!user.getEmail().equals(email)) {
+            throw new AccessDeniedException("User is not authorized to delete this account");
+        }
+        userRepository.delete(user);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) {

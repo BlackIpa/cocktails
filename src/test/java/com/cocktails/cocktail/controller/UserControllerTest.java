@@ -32,10 +32,12 @@ import java.security.Principal;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -70,7 +72,7 @@ class UserControllerTest {
 
     @Test
     @SneakyThrows
-    public void registerShouldSaveUser() {
+    public void register_ShouldSaveUser() {
         // given
         val request = SignUpRequest.builder()
                 .email("test@email.com")
@@ -95,7 +97,7 @@ class UserControllerTest {
 
     @Test
     @SneakyThrows
-    public void registerShouldThrowWhenEmailExists() {
+    public void register_ShouldThrow_WhenEmailExists() {
         // given
         SignUpRequest request = SignUpRequest.builder()
                 .email("test@email.com")
@@ -118,7 +120,7 @@ class UserControllerTest {
 
     @Test
     @SneakyThrows
-    public void loginShouldReturn() {
+    public void login_ShouldReturn() {
         // given
         SignInRequest request = SignInRequest.builder()
                 .email("test@email.com")
@@ -140,7 +142,7 @@ class UserControllerTest {
 
     @Test
     @SneakyThrows
-    public void loginShouldThrowWhenEmailOrPasswordInvalid() {
+    public void login_ShouldThrow_WhenEmailOrPasswordInvalid() {
         // given
         SignInRequest request = SignInRequest.builder()
                 .email("test@email.com")
@@ -161,7 +163,7 @@ class UserControllerTest {
 
     @Test
     @SneakyThrows
-    public void logoutShouldReturn() {
+    public void logout_ShouldReturn() {
         // given
         val token = "token";
         val request = SignOutRequest.builder()
@@ -178,7 +180,7 @@ class UserControllerTest {
 
     @Test
     @SneakyThrows
-    public void logoutShouldThrowWhenWhenInvalidToken() {
+    public void logout_ShouldThrow_WhenInvalidToken() {
         // given
         val token = "token";
         val request = SignOutRequest.builder()
@@ -199,7 +201,7 @@ class UserControllerTest {
 
     @Test
     @SneakyThrows
-    public void getUserDetailsShouldReturn() {
+    public void getUserDetails_ShouldReturn() {
         // given
         val email = "test@email.com";
         val principal = mock(Principal.class);
@@ -220,7 +222,7 @@ class UserControllerTest {
 
     @Test
     @SneakyThrows
-    public void getUserDetailsShouldThrowIfUserNotFound() {
+    public void getUserDetails_ShouldThrow_WhenUserNotFound() {
         // given
         val email = "test@email.com";
         val principal = mock(Principal.class);
@@ -240,7 +242,7 @@ class UserControllerTest {
 
     @Test
     @SneakyThrows
-    public void updateUserShouldReturn() {
+    public void updateUser_ShouldReturn() {
         // given
         val email = "test@email.com";
         val principal = mock(Principal.class);
@@ -272,7 +274,7 @@ class UserControllerTest {
 
     @Test
     @SneakyThrows
-    public void updateUserShouldThrowIfUserNotFound() {
+    public void updateUser_ShouldThrow_WhenUserNotFound() {
         // given
         val email = "test@email.com";
         val principal = mock(Principal.class);
@@ -293,6 +295,28 @@ class UserControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(containsString("User not found")));
         verify(userService).updateUser(eq(email), any(UserUpdateRequest.class));
+    }
+
+    @Test
+    @SneakyThrows
+    public void deleteUser_ShouldDeleteUser() {
+        // given
+        val userId = 3L;
+        val email = "test@email.com";
+        val principal = mock(Principal.class);
+
+        // when
+        when(principal.getName()).thenReturn(email);
+        doNothing().when(userService).deleteUser(userId, email);
+
+        // then
+        mockMvc.perform(delete("/user/" + userId)
+                        .principal(principal)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("User deleted successfully")));
+
+        verify(userService).deleteUser(userId, email);
     }
 
 }

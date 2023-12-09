@@ -15,13 +15,16 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.file.AccessDeniedException;
 import java.security.Principal;
 
 @RestController
@@ -35,6 +38,13 @@ public class UserController {
     private final RefreshTokenService refreshTokenService;
 
     private final UserService userService;
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId, Principal principal) throws AccessDeniedException {
+        log.info("Delete user");
+        userService.deleteUser(userId, principal.getName());
+        return ResponseEntity.ok("User deleted successfully");
+    }
 
     @GetMapping("/details")
     public ResponseEntity<UserResponse> getUserDetails(Principal principal) {
