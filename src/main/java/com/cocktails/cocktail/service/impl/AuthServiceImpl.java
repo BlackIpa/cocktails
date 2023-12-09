@@ -34,9 +34,9 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
         val jwt = jwtUtils.generateToken(user);
         val refreshToken = refreshTokenService.createRefreshToken(user);
-
         return JwtResponse.builder()
                 .token(jwt)
+                .id(user.getId())
                 .email(user.getEmail())
                 .refreshToken(refreshToken)
                 .build();
@@ -55,6 +55,7 @@ public class AuthServiceImpl implements AuthService {
         refreshTokenService.createRefreshToken(user);
         return JwtResponse.builder()
                 .token(newAccessToken)
+                .id(user.getId())
                 .email(user.getEmail())
                 .refreshToken(newRefreshToken)
                 .build();
