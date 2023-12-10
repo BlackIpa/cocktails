@@ -35,17 +35,14 @@ class CocktailMapperTest {
     @Test
     public void cocktailToDetailsDto_ShouldReturnResult() {
         // given
-        val cocktail = createCocktail("Whiskey Sour");
         List<CocktailIngredient> cocktailIngredients = new ArrayList<>();
-        val cocktailIngredient = CocktailIngredient.builder()
-                .quantity(BigDecimal.valueOf(2)).build();
         val ingredient = Ingredient.builder().name("Vodka").type(IngredientType.SPIRIT).build();
-        cocktailIngredient.setIngredient(ingredient);
+        val cocktailIngredient = CocktailIngredient.builder()
+                .ingredient(ingredient).quantity(BigDecimal.valueOf(2)).build();
         cocktailIngredients.add(cocktailIngredient);
-
         List<Step> steps = new ArrayList<>();
         steps.add(Step.builder().stepNumber(1).description("Add ingredients").build());
-
+        val cocktail = createCocktail("Whiskey Sour");
         cocktail.setCocktailIngredients(cocktailIngredients);
         cocktail.setSteps(steps);
 
@@ -63,7 +60,6 @@ class CocktailMapperTest {
     @Test
     public void cocktailToSummaryDto_ShouldReturnResult() {
         val cocktail = createCocktail("Martini");
-
         val cocktailSummaryDto = cocktailMapper.cocktailToSummaryDto(cocktail);
 
         assertEquals(cocktail.getId(), cocktailSummaryDto.getId());

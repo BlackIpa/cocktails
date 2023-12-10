@@ -89,7 +89,7 @@ public class CocktailServiceImplTest {
     @Test
     public void findCocktailsByName_ShouldReturnResult() {
         // given
-        String keyword = "whi";
+        val keyword = "whi";
         val cocktails = createCocktailSummaryDtoList();
         when(cocktailRepository.findByName(keyword)).thenReturn(cocktails);
 
@@ -103,7 +103,7 @@ public class CocktailServiceImplTest {
     @Test
     public void findCocktailsByName_ShouldReturnEmptyList() {
         // given
-        String keyword = "whi";
+        val keyword = "whi";
 
         // when
         val result = cocktailService.findCocktailsByName(keyword);
@@ -115,7 +115,7 @@ public class CocktailServiceImplTest {
     @Test
     public void findCocktailsByNamePart_ShouldReturnResult() {
         // given
-        String keyword = "whi";
+        val keyword = "whi";
         val names = Arrays.asList("Whiskey Sour", "Whiskey Smash");
         when(cocktailRepository.findByNamePart(keyword)).thenReturn(names);
 
@@ -129,7 +129,7 @@ public class CocktailServiceImplTest {
     @Test
     public void findCocktailsByNamePart_ShouldReturnEmptyList() {
         // given
-        String keyword = "wh";
+        val keyword = "wh";
 
         // when
         val result = cocktailService.findCocktailsByNamePart(keyword);
@@ -141,7 +141,7 @@ public class CocktailServiceImplTest {
     @Test
     public void findCocktailsByIngredient_ShouldReturnResult() {
         // given
-        String keyword = "whiskey";
+        val keyword = "whiskey";
         val cocktails = createCocktailList();
         val summaryDto1 = createCocktailSummaryDto("Whiskey Sour", "highball-icon");
         val summaryDto2 = createCocktailSummaryDto("Whiskey Smash", "martini-icon");

@@ -99,7 +99,7 @@ class UserControllerTest {
     @SneakyThrows
     public void register_ShouldThrow_WhenEmailExists() {
         // given
-        SignUpRequest request = SignUpRequest.builder()
+        val request = SignUpRequest.builder()
                 .email("test@email.com")
                 .firstName("test")
                 .lastName("name")
@@ -122,12 +122,12 @@ class UserControllerTest {
     @SneakyThrows
     public void login_ShouldReturn() {
         // given
-        SignInRequest request = SignInRequest.builder()
+        val request = SignInRequest.builder()
                 .email("test@email.com")
                 .password("test1234")
                 .build();
 
-        JwtResponse response = JwtResponse.builder().token("string").build();
+        val response = JwtResponse.builder().token("string").build();
 
         // when
         when(authService.authenticateUser(request)).thenReturn(response);
@@ -144,7 +144,7 @@ class UserControllerTest {
     @SneakyThrows
     public void login_ShouldThrow_WhenEmailOrPasswordInvalid() {
         // given
-        SignInRequest request = SignInRequest.builder()
+        val request = SignInRequest.builder()
                 .email("test@email.com")
                 .password("test")
                 .build();

@@ -4,6 +4,7 @@ import com.cocktails.cocktail.dto.GroupedIngredientsDto;
 import com.cocktails.cocktail.service.IngredientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,7 @@ public class IngredientController {
 
     @GetMapping("/search")
     public ResponseEntity<GroupedIngredientsDto> findIngredientsByNamePart(@RequestParam String name) {
-        GroupedIngredientsDto groupedIngredients = ingredientService.findIngredientsByNamePart(name);
+        val groupedIngredients = ingredientService.findIngredientsByNamePart(name);
         return ResponseEntity.ok(groupedIngredients);
     }
 }
