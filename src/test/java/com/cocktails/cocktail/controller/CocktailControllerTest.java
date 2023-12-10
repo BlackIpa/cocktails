@@ -1,9 +1,10 @@
 package com.cocktails.cocktail.controller;
 
-import com.cocktails.cocktail.model.emuns.PreparationMethod;
 import com.cocktails.cocktail.dto.CocktailDetailsDto;
 import com.cocktails.cocktail.dto.CocktailSummaryDto;
+import com.cocktails.cocktail.model.emuns.PreparationMethod;
 import com.cocktails.cocktail.service.impl.CocktailServiceImpl;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,15 +16,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import jakarta.persistence.EntityNotFoundException;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -91,8 +92,10 @@ class CocktailControllerTest {
     public void findCocktailById_ShouldReturnResult() {
         // given
         val id = 1L;
-        val cocktailDetailsDto = new CocktailDetailsDto(id, "Casino", PreparationMethod.STIRRED,
-                "Glass", "highball-icon", Collections.emptyList(), Collections.emptyList());
+        val cocktailDetailsDto = CocktailDetailsDto.builder()
+                .id(id).name("Casino").preparationMethod(PreparationMethod.STIRRED).glassName("Glass")
+                .glassIcon("highball").cocktailIngredientsDto(Collections.emptyList())
+                .stepsDto(Collections.emptyList()).build();
         when(cocktailService.findById(id)).thenReturn(cocktailDetailsDto);
 
         // when & then
@@ -102,7 +105,7 @@ class CocktailControllerTest {
                 .andExpect(jsonPath("$.name", is("Casino")))
                 .andExpect(jsonPath("$.preparationMethod", is(PreparationMethod.STIRRED.name())))
                 .andExpect(jsonPath("$.glassName", is("Glass")))
-                .andExpect(jsonPath("$.glassIcon", is("highball-icon")))
+                .andExpect(jsonPath("$.glassIcon", is("highball")))
                 .andExpect(jsonPath("$.cocktailIngredientsDto", is(Collections.emptyList())))
                 .andExpect(jsonPath("$.stepsDto", is(Collections.emptyList())));
 
@@ -162,8 +165,10 @@ class CocktailControllerTest {
 
     private List<CocktailSummaryDto> createCocktailSummaryDtoList() {
         return Arrays.asList(
-                new CocktailSummaryDto(1L, "Whiskey Sour", PreparationMethod.STIRRED, "highball-icon"),
-                new CocktailSummaryDto(2L, "Whiskey Smash", PreparationMethod.STIRRED, "martini-icon")
+                CocktailSummaryDto.builder().id(1L).name("Whiskey Sour")
+                        .preparationMethod(PreparationMethod.STIRRED).glassIcon("highball-icon").build(),
+                CocktailSummaryDto.builder().id(2L).name("Whiskey Smash")
+                        .preparationMethod(PreparationMethod.STIRRED).glassIcon("martini-icon").build()
         );
     }
 

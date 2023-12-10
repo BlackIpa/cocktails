@@ -1,14 +1,13 @@
 package com.cocktails.cocktail.service.impl;
 
-import com.cocktails.cocktail.model.Cocktail;
-import com.cocktails.cocktail.model.Glass;
-import com.cocktails.cocktail.model.Ingredient;
-import com.cocktails.cocktail.model.emuns.PreparationMethod;
 import com.cocktails.cocktail.dto.CocktailDetailsDto;
 import com.cocktails.cocktail.dto.CocktailSummaryDto;
+import com.cocktails.cocktail.model.Cocktail;
+import com.cocktails.cocktail.model.Glass;
+import com.cocktails.cocktail.model.emuns.PreparationMethod;
 import com.cocktails.cocktail.repository.CocktailRepository;
-import com.cocktails.cocktail.service.impl.CocktailServiceImpl;
 import com.cocktails.cocktail.service.mapper.CocktailMapper;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,15 +15,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CocktailServiceImplTest {
@@ -59,9 +61,10 @@ public class CocktailServiceImplTest {
     public void findById_ShouldReturnResult() {
         // given
         val id = 1L;
-        val glass = new Glass(id, "name", "icon");
-        val cocktail = new Cocktail(id, List.of(), "Whiskey Sour", List.of(), PreparationMethod.STIRRED, glass);
-        val cocktailDetailsDto = new CocktailDetailsDto();
+        val glass = Glass.builder().name("name").iconName("icon").build();
+        val cocktail = Cocktail.builder().id(id).name("Whiskey Sour")
+                .preparationMethod(PreparationMethod.STIRRED).glass(glass).build();
+        val cocktailDetailsDto = CocktailDetailsDto.builder().build();
         when(cocktailRepository.findById(id)).thenReturn(Optional.of(cocktail));
         when(cocktailMapper.cocktailToDetailsDto(cocktail)).thenReturn(cocktailDetailsDto);
 
@@ -100,7 +103,7 @@ public class CocktailServiceImplTest {
     @Test
     public void findCocktailsByName_ShouldReturnEmptyList() {
         // given
-        String keyword = "wh";
+        String keyword = "whi";
 
         // when
         val result = cocktailService.findCocktailsByName(keyword);
@@ -140,8 +143,8 @@ public class CocktailServiceImplTest {
         // given
         String keyword = "whiskey";
         val cocktails = createCocktailList();
-        val summaryDto1 = new CocktailSummaryDto(1L, "Whiskey Sour", PreparationMethod.STIRRED, "highball-icon");
-        val summaryDto2 = new CocktailSummaryDto(2L, "Whiskey Smash", PreparationMethod.STIRRED, "martini-icon");
+        val summaryDto1 = createCocktailSummaryDto("Whiskey Sour", "highball-icon");
+        val summaryDto2 = createCocktailSummaryDto("Whiskey Smash", "martini-icon");
         when(cocktailRepository.findByCocktailIngredients_Ingredient_NameIgnoreCase(keyword)).thenReturn(cocktails);
         when(cocktailMapper.cocktailToSummaryDto(any(Cocktail.class))).thenReturn(summaryDto1, summaryDto2);
 
@@ -157,17 +160,23 @@ public class CocktailServiceImplTest {
     }
 
     private List<CocktailSummaryDto> createCocktailSummaryDtoList() {
-        return Arrays.asList(
-                new CocktailSummaryDto(1L, "Whiskey Sour", PreparationMethod.STIRRED, "highball-icon"),
-                new CocktailSummaryDto(2L, "Whiskey Smash", PreparationMethod.STIRRED, "martini-icon")
-        );
+        return Arrays.asList(createCocktailSummaryDto("Whiskey Sour", "highball-icon"),
+                createCocktailSummaryDto("Whiskey Smash", "martini-icon"));
     }
 
     private List<Cocktail> createCocktailList() {
-        val glass = new Glass(1L, "name", "icon");
+        val glass = Glass.builder().id(1L).name("name").iconName("icon").build();
         return Arrays.asList(
-                new Cocktail(1L, List.of(), "Whiskey Sour", List.of(), PreparationMethod.STIRRED, glass),
-                new Cocktail(2L, List.of(), "Whiskey Smash", List.of(), PreparationMethod.STIRRED, glass)
+                Cocktail.builder().id(1L).name("Whiskey Sour")
+                        .preparationMethod(PreparationMethod.STIRRED).glass(glass).build(),
+                Cocktail.builder().id(2L).name("Whiskey Smash")
+                        .preparationMethod(PreparationMethod.STIRRED).glass(glass).build()
         );
     }
+
+    private CocktailSummaryDto createCocktailSummaryDto(final String name, final String icon) {
+        return CocktailSummaryDto.builder().id(1L).name(name)
+                .preparationMethod(PreparationMethod.STIRRED).glassIcon(icon).build();
+    }
+
 }

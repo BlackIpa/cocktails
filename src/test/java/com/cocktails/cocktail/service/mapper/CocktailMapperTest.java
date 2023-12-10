@@ -8,7 +8,6 @@ import com.cocktails.cocktail.model.Step;
 import com.cocktails.cocktail.model.emuns.IngredientType;
 import com.cocktails.cocktail.model.emuns.PreparationMethod;
 import lombok.val;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,17 +37,14 @@ class CocktailMapperTest {
         // given
         val cocktail = createCocktail("Whiskey Sour");
         List<CocktailIngredient> cocktailIngredients = new ArrayList<>();
-        val cocktailIngredient = new CocktailIngredient();
-        cocktailIngredient.setQuantity(BigDecimal.valueOf(2));
+        val cocktailIngredient = CocktailIngredient.builder()
+                .quantity(BigDecimal.valueOf(2)).build();
         val ingredient = Ingredient.builder().name("Vodka").type(IngredientType.SPIRIT).build();
         cocktailIngredient.setIngredient(ingredient);
         cocktailIngredients.add(cocktailIngredient);
 
         List<Step> steps = new ArrayList<>();
-        val step = new Step();
-        step.setDescription("Add ingredients");
-        step.setStepNumber(1);
-        steps.add(step);
+        steps.add(Step.builder().stepNumber(1).description("Add ingredients").build());
 
         cocktail.setCocktailIngredients(cocktailIngredients);
         cocktail.setSteps(steps);
@@ -77,8 +73,9 @@ class CocktailMapperTest {
     }
 
     private Cocktail createCocktail(final String name) {
-        val glass = new Glass(1L, "name", "icon");
-        return new Cocktail(1L, List.of(), name, List.of(), PreparationMethod.STIRRED, glass);
+        val glass = Glass.builder().id(1L).name("name").iconName("icon").build();
+        return Cocktail.builder().id(1L).name(name)
+                .preparationMethod(PreparationMethod.STIRRED).glass(glass).build();
     }
 
 }

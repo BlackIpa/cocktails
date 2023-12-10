@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class IngredientMapper {
 
     public IngredientDto ingredientToDto(Ingredient ingredient) {
-        return  IngredientDto.builder()
+        return IngredientDto.builder()
                 .id(ingredient.getId())
                 .name(ingredient.getName())
                 .type(ingredient.getType())

@@ -1,27 +1,25 @@
 package com.cocktails.cocktail.service.mapper;
 
-import com.cocktails.cocktail.model.CocktailIngredient;
-import com.cocktails.cocktail.model.Ingredient;
 import com.cocktails.cocktail.dto.CocktailIngredientDto;
-import com.cocktails.cocktail.dto.IngredientDto;
+import com.cocktails.cocktail.model.CocktailIngredient;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class CocktailIngredientMapper {
 
-    public CocktailIngredientDto cocktailIngredientToDto(CocktailIngredient cocktailIngredient) {
-        CocktailIngredientDto cocktailIngredientDto = new CocktailIngredientDto();
-        cocktailIngredientDto.setId(cocktailIngredient.getId());
-        cocktailIngredientDto.setQuantity(cocktailIngredient.getQuantity());
-        cocktailIngredientDto.setUnit(cocktailIngredient.getUnit());
+    private final IngredientMapper ingredientMapper;
 
-        Ingredient ingredient = cocktailIngredient.getIngredient();
-        IngredientDto ingredientDto = new IngredientDto();
-        ingredientDto.setId(ingredient.getId());
-        ingredientDto.setName(ingredient.getName());
-        ingredientDto.setType(ingredient.getType());
-        cocktailIngredientDto.setIngredient(ingredientDto);
-        return cocktailIngredientDto;
+    public CocktailIngredientDto cocktailIngredientToDto(CocktailIngredient cocktailIngredient) {
+        val ingredientDto = ingredientMapper.ingredientToDto(cocktailIngredient.getIngredient());
+        return CocktailIngredientDto.builder()
+                .id(cocktailIngredient.getId())
+                .quantity(cocktailIngredient.getQuantity())
+                .unit(cocktailIngredient.getUnit())
+                .ingredient(ingredientDto)
+                .build();
     }
 
 }
