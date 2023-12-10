@@ -5,6 +5,7 @@ import com.cocktails.cocktail.dto.CocktailSummaryDto;
 import com.cocktails.cocktail.service.impl.CocktailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class CocktailController {
     @GetMapping
     public ResponseEntity<List<CocktailSummaryDto>> findCocktails(@RequestParam(required = false) String name) {
         log.info("Show cocktails list");
-        final List<CocktailSummaryDto> cocktailsList = name == null
+        val cocktailsList = name == null
                 ? cocktailService.readAll()
                 : cocktailService.findCocktailsByName(name);
         return ResponseEntity.ok()
@@ -36,7 +37,7 @@ public class CocktailController {
     public ResponseEntity<CocktailDetailsDto> findCocktailById(@PathVariable Long id) {
         log.info("Find cocktail by id");
         try {
-            CocktailDetailsDto cocktailDetailsDto = cocktailService.findById(id);
+            val cocktailDetailsDto = cocktailService.findById(id);
             return ResponseEntity.ok(cocktailDetailsDto);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
