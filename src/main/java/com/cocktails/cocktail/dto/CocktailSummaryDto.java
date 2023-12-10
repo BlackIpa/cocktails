@@ -4,12 +4,10 @@ import com.cocktails.cocktail.model.emuns.PreparationMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Data
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CocktailSummaryDto {

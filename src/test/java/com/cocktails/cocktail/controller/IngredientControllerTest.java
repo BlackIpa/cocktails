@@ -88,8 +88,9 @@ class IngredientControllerTest {
 
     private GroupedIngredientsDto createMockGroupedIngredientsDto() {
         Map<IngredientType, List<IngredientDto>> groupedIngredients = new HashMap<>();
-        groupedIngredients.put(IngredientType.SPIRIT, Collections.singletonList(new IngredientDto(1L, "Vodka", IngredientType.SPIRIT)));
+        groupedIngredients.put(IngredientType.SPIRIT, Collections.singletonList(
+                IngredientDto.builder().id(1L).name("Vodka").type(IngredientType.SPIRIT).build()));
 
-        return new GroupedIngredientsDto(groupedIngredients);
+        return GroupedIngredientsDto.builder().ingredientsGroupedByType(groupedIngredients).build();
     }
 }
