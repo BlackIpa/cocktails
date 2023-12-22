@@ -30,8 +30,7 @@ public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    private static final String[] authenticatedEndpoints = {"/user/details", "/user/logout", "/user/refresh",
-            "/user/update"};
+    private static final String[] authenticatedEndpoints = {"/user/**", "/favourites/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -51,6 +50,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/user/register", "/user/login").permitAll()
                         .requestMatchers(authenticatedEndpoints).authenticated()
                         .anyRequest().permitAll()
                 )
